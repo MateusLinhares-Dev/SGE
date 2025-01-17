@@ -6,12 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12.3' 
       
       - name: Check out Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v2
       
       - name: install Poetry
         uses: snok/install-poetry@v1
