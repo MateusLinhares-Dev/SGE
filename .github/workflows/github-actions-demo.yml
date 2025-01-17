@@ -1,0 +1,35 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3' 
+      
+      - name: Check out Repository
+        uses: actions/checkout@v5
+      
+      - name: install Poetry
+        uses: snok/install-poetry@v1
+        with:
+            version: 2.0.1
+            virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction --no-root
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+
+      - name: Run tests
+        run: poetry run prospector ./sge_project/
