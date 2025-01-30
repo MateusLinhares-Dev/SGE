@@ -17,8 +17,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -v https://install.python-poetry.org
-
 # Instalar o Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
     ln -s /root/.local/bin/poetry /usr/local/bin/poetry
@@ -36,8 +34,11 @@ RUN poetry config virtualenvs.create false && \
 # Copiar o código da aplicação
 COPY sge_project /app/sge_project
 
-# Expor a porta usada pelo Django
-EXPOSE 8000
+# Copiar o script entrypoint.sh para a aplicação
+COPY scripts /app/
 
-# Comando padrão para rodar o servidor
-CMD ["python", "sge_project/manage.py", "runserver", "0.0.0.0:8000"]
+# Alterando as permissões
+RUN chmod +x /app/entrypoint.sh
+
+# Expor a porta 8000 para o Django
+EXPOSE 8000
