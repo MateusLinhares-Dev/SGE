@@ -1,6 +1,6 @@
 .header-blue {
-    background: linear-gradient(135deg, #fe2929, #ffb3c5);
-    background-color: #184e8e;
+    background: linear-gradient(190deg, #0307f8, #8188e6);
+    background-color: #86a5cc;
     padding-bottom: 80px;
     font-family: 'Source Sans Pro', sans-serif;
   }
@@ -34,7 +34,7 @@
   }
   
   .header-blue .navbar .navbar-brand:hover {
-    color: #252525;
+    color: #f70a0a;
   }
   
   .header-blue .navbar .navbar-collapse {
@@ -102,8 +102,8 @@
   
   /* Estilo para o link principal do dropdown ao passar o mouse */
   .header-blue .navbar-nav .nav-item.dropdown:hover > .dropdown-toggle {
-    background-color: #680404;  /* Cor de fundo do item de menu */
-    color: #000000;  /* Cor do texto */
+    background-color: #0540ee;  /* Cor de fundo do item de menu */
+    color: #f80404;  /* Cor do texto */
   }
   
   /* Estilo para os itens dentro do dropdown */
@@ -114,13 +114,13 @@
   
   /* Estilo para o botão "Log In" ao passar o mouse */
   .header-blue .navbar .navbar-collapse span .login:hover {
-    color: #007bff; /* Cor do texto ao passar o mouse */
+    color: #fa0606; /* Cor do texto ao passar o mouse */
     text-decoration: underline;  /* Sublinhado */
   }
   
   /* Estilo para o botão "Signup" */
   .header-blue .navbar .action-button:hover {
-    background-color: #007bff;  /* Fundo azul ao passar o mouse */
+    background-color: #ff0000;  /* Fundo azul ao passar o mouse */
     color: #fff;  /* Texto branco */
     transition: background-color 0.3s ease, color 0.3s ease;
   }
