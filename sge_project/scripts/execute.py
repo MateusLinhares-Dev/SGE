@@ -2,7 +2,7 @@ import os
 
 
 def run_manage():
-    os.system("python manage.py runserver 0.0.0.0:8000")
+    os.system("python sge_project/manage.py runserver 0.0.0.0:8000")
 
 
 if __name__ == "__main__":

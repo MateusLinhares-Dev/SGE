@@ -1,0 +1,140 @@
+<div id="chatbot-container" class="chatbot-container">
+    <div class="chatbot-header">
+        <span>Chatbot</span>
+        <button id="close-chatbot" class="btn btn-sm btn-danger">X</button>
+    </div>
+    <div id="chat-messages" class="chat-messages"></div>
+    <div class="chat-input">
+        <input type="text" id="chat-input-field" class="form-control" placeholder="Digite sua mensagem...">
+        <button id="send-message" class="btn btn-primary">Enviar</button>
+    </div>
+</div>
+
+<button id="open-chatbot" class="btn btn-primary chatbot-button">💬</button>
+
+<style>
+    .chatbot-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 320px;
+        max-width: 90%;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+    }
+
+    .chatbot-header {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .chat-messages {
+        height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+    }
+
+    .chat-input input {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .chatbot-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        border-radius: 50%;
+        padding: 12px;
+    }
+
+    .user-message {
+        background: #007bff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        text-align: right;
+    }
+
+    .bot-message {
+        background: #f1f1f1;
+        color: black;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatbotContainer = document.getElementById("chatbot-container");
+    const openChatbotBtn = document.getElementById("open-chatbot");
+    const closeChatbotBtn = document.getElementById("close-chatbot");
+    const sendMessageBtn = document.getElementById("send-message");
+    const chatInputField = document.getElementById("chat-input-field");
+    const chatMessages = document.getElementById("chat-messages");
+
+    openChatbotBtn.addEventListener("click", () => {
+        chatbotContainer.style.display = "flex";
+        openChatbotBtn.style.display = "none";
+    });
+
+    closeChatbotBtn.addEventListener("click", () => {
+        chatbotContainer.style.display = "none";
+        openChatbotBtn.style.display = "block";
+    });
+
+    sendMessageBtn.addEventListener("click", sendMessage);
+    chatInputField.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") sendMessage();
+    });
+
+    function sendMessage() {
+        const userMessage = chatInputField.value.trim();
+        const token = localStorage.getItem('access_token')
+
+        if (!userMessage) return;
+
+        addMessage("Você: " + userMessage, "user-message");
+        chatInputField.value = "";
+
+        fetch("{% url 'chatbot_view' %}", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
+            body: JSON.stringify({ mensagem: userMessage })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage("Bot: " + data.resposta, "bot-message");
+        })
+        .catch(error => console.error("Erro ao enviar mensagem:", error));
+    }
+
+    function addMessage(message, className) {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add(className);
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+});
+</script>

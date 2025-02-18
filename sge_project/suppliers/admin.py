@@ -1,3 +1,12 @@
-from django.contrib import admin  # type: ignore
+from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+
+@admin.register(models.Supplier)
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "description",
+    )
+    search_fields = ("name",)

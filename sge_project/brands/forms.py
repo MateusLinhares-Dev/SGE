@@ -6,14 +6,9 @@ class BrandForm(forms.ModelForm):
 
     class Meta:
         model = Brand
-        fields = ['name', 'description']
+        fields = ["name", "description"]
         widgets = {
-            'name': forms.TextInput({'class': 'form-control'}),
-            'description': forms.Textarea(
-                {'class': 'form-control', 'rows': 3}
-                ),
+            "name": forms.TextInput({"class": "form-control"}),
+            "description": forms.Textarea({"class": "form-control", "rows": 3}),
         }
-        labels = {
-            'name': 'Nome',
-            'description':'Descrição'
-        }
+        labels = {"name": "Nome", "description": "Descrição"}

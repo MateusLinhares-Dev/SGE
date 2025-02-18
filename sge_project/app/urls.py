@@ -1,7 +1,19 @@
 from django.contrib import admin  # type: ignore
 from django.urls import include, path  # type: ignore
+from django.contrib.auth import views as auth_views
+from .views import home
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("brands.urls"))
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("api/v1/", include("authentication.urls")),
+    path("", home, name="home"),
+    path("", include("categories.urls")),
+    path("", include("brands.urls")),
+    path("", include("suppliers.urls")),
+    path("", include("inflows.urls")),
+    path("", include("outflows.urls")),
+    path("", include("products.urls")),
+    path("", include("chatbot.urls"))
 ]

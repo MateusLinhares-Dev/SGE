@@ -2,53 +2,68 @@
     <div class="header-blue">
         <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Sistema de Gestão de Estoque (SGE)</a>
+                <a class="navbar-brand" href="{% url 'home' %}">Sistema de Gestão de Estoque (SGE)</a>
                 <div class="collapse navbar-collapse"
                     id="navcol-1">
                     <ul class="nav navbar-nav">
-                        <li class="nav-item" role="presentation"><a class="nav-link" href="#">
-                            <i class="bi bi-person-lines-fill"></i>
-                            Contato</a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle nav-link" data-bs-toggle="dropdown" aria-expanded="false" href="#">Serviços</a>
                             <div class="dropdown-menu" role="menu">
                                 <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
-                                    <a class="dropdown-item" role="presentation" href="#">
-                                        <i class="bi bi-truck fs-4"></i>
-                                        Fornecedores
-                                    </a>
-                                    <a class="dropdown-item" role="presentation" href="#">
+                                    {% if perms.suppliers.view_supplier %}
+                                        <a class="dropdown-item" role="presentation" href="{% url 'supplier_list'%}">
+                                            <i class="bi bi-truck fs-4"></i>
+                                            Fornecedores
+                                        </a>
+                                    {% endif %}
+                                    <a class="dropdown-item" role="presentation" href="{% url 'home' %}">
                                         <i class="bi bi-speedometer2 fs-4"></i>
                                         Dashboards
                                     </a>
-                                    <a class="dropdown-item" role="presentation" href="{% url "brand_list" %}">
-                                        <i class="bi bi-shop fs-4"></i>
-                                        Marcas
-                                    </a>
-                                    <a class="dropdown-item" role="presentation" href="#">
-                                        <i class="bi bi-tags fs-4"></i>
-                                        Categorias
-                                    </a>
-                                    <a class="dropdown-item" role="presentation" href="#">
-                                        <i class="bi bi-box-seam fs-4"></i>
-                                        Produtos
-                                    </a>
-                                    <a class="dropdown-item" role="presentation" href="#">
-                                        <i class="bi bi-arrow-down-left-square fs-4"></i>
-                                        Entradas
-                                    </a>
-                                    <a class="dropdown-item" role="presentation" href="#">
-                                        <i class="bi bi-arrow-up-right-square fs-4"></i>
-                                        Saidas
-                                    </a>
+                                    {% if perms.brands.view_brand %}
+                                        <a class="dropdown-item" role="presentation" href="{% url "brand_list" %}">
+                                            <i class="bi bi-shop fs-4"></i>
+                                            Marcas
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.categories.view_category %}
+                                        <a class="dropdown-item" role="presentation" href="{% url 'category_list'%}">
+                                            <i class="bi bi-tags fs-4"></i>
+                                            Categorias
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.products.view_product %}
+                                        <a class="dropdown-item" role="presentation" href="{% url 'product_list' %}">
+                                            <i class="bi bi-box-seam fs-4"></i>
+                                            Produtos
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.inflows.view_inflow %}
+                                        <a class="dropdown-item" role="presentation" href="{% url 'inflow_list'%}">
+                                            <i class="bi bi-arrow-down-left-square fs-4"></i>
+                                            Entradas
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.outflows.view_outflow %}
+                                        <a class="dropdown-item" role="presentation" href="{% url 'outflow_list' %}">
+                                            <i class="bi bi-arrow-up-right-square fs-4"></i>
+                                            Saidas
+                                        </a>
+                                    {% endif %}
                                 </nav>
                             </div>
                         </li>
                     </ul>
-                    <span class="navbar-text ms-auto"> <a class="login" href="#">Log In</a></span>
-                    <a class="btn btn-light action-button" role="button" href="#">Signup</a>
-            </div>
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="post" id="logout-form" class="action-button navbar-text ms-auto">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link text-decoration-none text-reset nav-link px-0 align-middle">
+                            <i class="bi bi-box-arrow-right fs-4 align-middle"></i>
+                            <span class="ms-1 align-middle">Sair</span>
+                        </button>
+                        </form>
+                    {% endif %}
+                </div>
         </nav>
     </div>
 </div>

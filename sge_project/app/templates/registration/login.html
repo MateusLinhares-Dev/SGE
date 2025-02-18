@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center mb-4">Login</h5>
+          <form id="loginForm" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="username" class="form-label">Usuário</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Senha</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">Entrar</button>
+            </div>
+          </form>
+          {% if form.errors %}
+            <div class="alert alert-danger mt-4">
+              <ul class="mb-0">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async function(event) {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+  
+      const response = await fetch("{% url 'token_obtain_pair' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+      });
+      console.log(response)
+      if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("access_token", data.access);
+          localStorage.setItem("refresh_token", data.refresh);
+          localStorage.setItem("username", username);
+      } else {
+          const errorMessage = document.getElementById("errorMessage");
+          errorMessage.textContent = "Usuário ou senha inválidos!";
+          errorMessage.style.display = "block";
+      }
+  });
+  </script>
+{% endblock %}

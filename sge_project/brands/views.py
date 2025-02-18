@@ -1,41 +1,75 @@
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView # type: ignore
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+)  # type: ignore
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
+from rest_framework import generics
 from . import forms
 from django.urls import reverse_lazy
 from . import models
+from . import serializers
 
 
-class BrandListView(ListView):
+class BrandListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = models.Brand
     template_name = "brand_list.html"
     context_object_name = "brands"
     paginate_by = 10
+    permission_required = "brands.view_brand"
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        name = self.request.GET.get('name')
+        name = self.request.GET.get("name")
 
         if name:
             queryset = queryset.filter(name__icontains=name)
-        
+
         return queryset
 
-class BrandCreateView(CreateView):
-    model = models.Brand
-    template_name = 'brand_create.html'
-    form_class= forms.BrandForm
-    success_url = reverse_lazy('brand_list')
 
-class BrandDetailView(DetailView):
-    model = models.Brand
-    template_name = 'brand_detail.html'
+class BrandCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
-class BrandUpdateView(UpdateView):
     model = models.Brand
-    template_name = 'brand_update.html'
+    template_name = "brand_create.html"
     form_class = forms.BrandForm
-    success_url = reverse_lazy('brand_list')
+    success_url = reverse_lazy("brand_list")
+    permission_required = "brands.add_brand"
 
-class BrandDeleteView(DeleteView):
+
+class BrandDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+
     model = models.Brand
-    template_name = 'brand_delete.html'
-    success_url = reverse_lazy('brand_list')
+    template_name = "brand_detail.html"
+    permission_required = "brands.view_brand"
+
+
+class BrandUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = models.Brand
+    template_name = "brand_update.html"
+    form_class = forms.BrandForm
+    success_url = reverse_lazy("brand_list")
+    permission_required = "brands.change_brand"
+
+
+class BrandDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = models.Brand
+    template_name = "brand_delete.html"
+    success_url = reverse_lazy("brand_list")
+    permission_required = "brands.delete_brand"
+
+
+class BrandCreateListAPIView(generics.ListCreateAPIView):
+    queryset = models.Brand.objects.all()
+    serializer_class = serializers.BrandSerializer
+
+
+class BrandRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Brand.objects.all()
+    serializer_class = serializers.BrandSerializer
